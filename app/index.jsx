@@ -21,12 +21,13 @@ const App =()=>{
                 </View>
     
                <CustomButton title="Continue with Email" 
-                handlePress={()=>{router.push('register')}}
+                handlePress={()=>{router.push('login')}}
                 contentContainerStyle = "w-full mt-7"
                />
              </View>
-          </ScrollView>
+             
              <StatusBar backgroundColor="#161622" style="light"/>
+          </ScrollView>
         </SafeAreaView>
       );
 }
