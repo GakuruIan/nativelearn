@@ -9,9 +9,12 @@ import FormField from '../../components/FormField'
 
 import {images} from '../../constants'
 
-import { signIn } from '../../lib/Appwrite'
+import { Getcurrentuser, signIn } from '../../lib/Appwrite'
+
+import { useGlobalContext } from '../../context/ContextProvider'
 
 const Login = () => {
+  const {setUser,setIsLoggedIn} = useGlobalContext()
   const [form,setForm] = useState({
     email:'',
     password:''
@@ -28,8 +31,11 @@ const Login = () => {
    }
    try {
      await signIn(email,password)
+     
+     const result = await Getcurrentuser()
+     setUser(result)
+     setIsLoggedIn(true)
 
-    //  context
     router.replace('/home')
    } catch (error) {
     Alert.alert('Error',error.message)

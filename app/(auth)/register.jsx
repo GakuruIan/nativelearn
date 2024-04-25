@@ -9,8 +9,11 @@ import { Link, router } from 'expo-router'
 import {images} from '../../constants'
 
 import { CreateUser } from '../../lib/Appwrite'
+import { useGlobalContext } from '../../context/ContextProvider'
 
 const register = () => {
+  const {setUser,setIsLoggedIn} = useGlobalContext()
+
    const [form, setForm] = useState({
     username:'',
     email:'',
@@ -38,6 +41,8 @@ const register = () => {
       try {
         
          const result = await CreateUser(username,email,password)
+         setUser(result)
+         setIsLoggedIn(true)
         //  context
         router.replace('/home')
       } catch (error) {
