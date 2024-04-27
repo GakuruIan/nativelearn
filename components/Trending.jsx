@@ -1,6 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity, ImageBackground ,Image} from 'react-native'
 import React,{useState} from 'react'
 import * as Animatable from 'react-native-animatable'
+import {ResizeMode, Video} from 'expo-av'
 
 import { icons } from '../constants'
 
@@ -32,7 +33,19 @@ const TrendingItem = ({activeItem,item})=>{
      duration={500}
     >
       {
-        playing ? <Text className="text-white">Playing</Text> 
+        playing ? 
+        <Video
+          source={{uri:item.video}}
+          className="w-52 h-72 rounded-md bg-white/40"
+          resizeMode={ResizeMode.CONTAIN}
+          useNativeControls
+          shouldPlay
+          onPlaybackStatusUpdate={(status)=>{
+            if(status.didJustFinish){
+                setPlay(false)
+            }
+          }}
+      /> 
         :
         <TouchableOpacity activeOpacity={0.7} onPress={()=>setPlaying(true)} className="mt-3  overflow-hidden rounded-md w-full relative justify-center items-center">
              <ImageBackground source={{uri:item.thumbnail}} resizeMode='cover' className="h-72 w-52 rounded-md"/>

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, FlatList, Image, RefreshControl } from 'react-native'
+import { View, Text, SafeAreaView, FlatList, Image, RefreshControl, TouchableOpacity } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import { StatusBar } from 'expo-status-bar'
 import {images} from '../../constants'
@@ -10,7 +10,10 @@ import { GetVideos,GetLatestVideos } from '../../lib/Appwrite'
 import useAppwrite from '../../lib/useAppwrite'
 import VideoCard from '../../components/VideoCard'
 
+import { useGlobalContext } from '../../context/ContextProvider'
+import { router } from 'expo-router'
 const home = () => {
+  const {user} = useGlobalContext()
   const [refreshing,setRefreshing] = useState(false)
   const {data:videos,refetch,isLoading} = useAppwrite(GetVideos)
   const {data:Lastest} = useAppwrite(GetLatestVideos)
@@ -27,7 +30,7 @@ const home = () => {
        <FlatList
        
         data={videos}
-         keyExtractor={(item)=>item.id}
+         keyExtractor={(item)=>item.$id}
          renderItem={({item})=>(
            <VideoCard video={item}/>
          )}
@@ -39,11 +42,13 @@ const home = () => {
                   <Text className="text-2xl text-white font-psemibold">Gakuru</Text>
                 </View>
                 <View>
-                  <Image 
-                    source={images.facespace}
-                    resizeMode="contain"
-                    className="h-10 w-10 rounded-full"
-                  />
+                  <TouchableOpacity  onPress={()=>{router.push('profile')}}>
+                    <Image 
+                      source={{uri:user?.avatar}}
+                      resizeMode="contain"
+                      className="h-10 w-10 rounded-full"
+                    />
+                  </TouchableOpacity>
                 </View>
             </View>
 

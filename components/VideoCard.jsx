@@ -1,14 +1,34 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native'
 import React,{useState} from 'react'
 import { icons } from '../constants'
 
+import {ResizeMode, Video} from 'expo-av'
+
 const VideoCard = ({video:{title,thumbnail,video,users:{avatar,username}}}) => {
   const [play, setPlay] = useState(false);
-
+   
   return (
     <View className="flex-col items-center px-4 mb-4">
        {
-        play ? <Text>Playing</Text> :
+        play ? 
+         <Video
+            source={{uri:video}}
+            className="w-full h-48 items-center rounded-md bg-white/40 mt-3"
+            resizeMode={ResizeMode.CONTAIN}
+            useNativeControls
+            shouldPlay
+            onPlaybackStatusUpdate={(status)=>{
+               console.log("playing",status.error);
+               if(status.error){
+                  Alert.alert("Error","An error occurred when playing the video")
+                  setPlay(false)
+               }
+               if(status.didJustFinish){
+                  setPlay(false)
+               }
+            }}
+          />
+          :
         <TouchableOpacity activeOpacity={0.7} onPress={()=>setPlay(true)} className="mt-3 h-48 overflow-hidden rounded-md w-full relative justify-center items-center">
              <Image source={{uri:thumbnail}} resizeMode='cover' className="h-full w-full"/>
              <Image source={icons.play} resizeMode='contain' className="h-10 w-10 absolute "/>
